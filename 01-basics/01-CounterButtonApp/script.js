@@ -1,8 +1,9 @@
-import { createApp } from './vendor/vue.esm-browser.js';
+import { createApp } from "./vendor/vue.esm-browser.js";
 
 // Создайте Vue приложение
-const app = createApp({
-  template: `<button type="button" @click='countClicks'>{{count}}</button>`,
+
+createApp({
+  template: `<button type="button" @click="countClicks">{{ count }}</button>`,
 
   data() {
     return {
@@ -15,4 +16,4 @@ const app = createApp({
       this.count++;
     },
   },
-}).mount('#app');
+}).mount("#app");

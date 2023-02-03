@@ -1,13 +1,24 @@
-import { defineComponent } from '../vendor/vue.esm-browser.js';
-// import MeetupAgendaItem from './MeetupAgendaItem.js';
+import { defineComponent } from "../vendor/vue.esm-browser.js";
+import MeetupAgendaItem from "./MeetupAgendaItem.js";
 
 export default defineComponent({
-  name: 'MeetupAgenda',
+  name: "MeetupAgenda",
 
-  template: `
+  props: {
+    agenda: {
+      type: Array,
+      required: true,
+    },
+  },
+
+  components: {
+    MeetupAgendaItem,
+  },
+
+  template: ` 
     <ul class="agenda">
-      <li class="agenda__item">
-        <!-- meetup agenda item -->
+      <li v-for="(item, index) in agenda" class="agenda__item" :key="index">
+        <MeetupAgendaItem :agenda-item='item'/>
       </li>
     </ul>`,
 });

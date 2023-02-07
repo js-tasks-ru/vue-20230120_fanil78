@@ -9,21 +9,21 @@
 </template>
 
 <script>
-import MeetupCover from './components/MeetupCover';
+import MeetupCover from "./components/MeetupCover";
 
 export default {
-  name: 'App',
+  name: "App",
 
   components: { MeetupCover },
 
   data() {
     return {
       meetupWithImage: {
-        title: 'VueConf US',
-        image: 'https://course-vue.javascript.ru/api/images/5',
+        title: "VueConf US",
+        image: "https://course-vue.javascript.ru/api/images/5",
       },
       meetupWithoutImage: {
-        title: 'Demo meetup',
+        title: "Demo meetup",
         image: null,
       },
     };

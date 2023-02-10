@@ -1,7 +1,7 @@
 <template>
   <div class="form-group" :class="{ 'form-group_inline': inline }">
     <!-- form-group_inline -->
-    <label class="form-group__label">{{ label }}</label>
+    <label v-if="label" class="form-group__label">{{ label }}</label>
     <slot></slot>
   </div>
 </template>

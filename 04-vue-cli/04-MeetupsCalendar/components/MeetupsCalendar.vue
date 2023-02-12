@@ -100,11 +100,11 @@ export default {
     daysOfPreviousMonth() {
       const days = [];
       const previousMonthYear = this.currentSelectedMonth ? this.currentSelectedYear : this.currentSelectedYear - 1;
-      const previousMonth = this.currentSelectedMonth ? this.currentSelectedMonth : 12;
+      const previousMonth = this.currentSelectedMonth ? this.currentSelectedMonth - 1 : 11;
 
       for (let i = 1; i < 32; i++) {
-        const day = new Date(`${previousMonthYear}-${previousMonth}-${i}`);
-        if (+day.getMonth() + 1 === previousMonth) {
+        const day = new Date(previousMonthYear, previousMonth, i);
+        if (day.getMonth() === previousMonth) {
           days.push(day);
         } else {
           break;
@@ -126,12 +126,12 @@ export default {
       const days = [];
       const lastMonthOfYear = this.currentSelectedMonth === 11;
       const nextMonthYear = lastMonthOfYear ? this.currentSelectedYear + 1 : this.currentSelectedYear;
-      const nextMonth = lastMonthOfYear ? 1 : this.currentSelectedMonth + 2;
+      const nextMonth = lastMonthOfYear ? 0 : this.currentSelectedMonth + 1;
 
       for (let i = 1; i < 32; i++) {
-        const day = new Date(`${nextMonthYear}-${nextMonth}-${i}`);
+        const day = new Date(nextMonthYear, nextMonth, i);
 
-        if (day.getMonth() + 1 === nextMonth) {
+        if (day.getMonth() === nextMonth) {
           days.push(day);
         } else {
           break;
@@ -143,7 +143,7 @@ export default {
     selectedMonthDays() {
       const days = [];
       for (let i = 1; i < 32; i++) {
-        const day = new Date(`${this.currentSelectedYear}-${this.currentSelectedMonth + 1}-${i}`);
+        const day = new Date(this.currentSelectedYear, this.currentSelectedMonth, i);
         if (day.getMonth() === this.currentSelectedMonth) {
           days.push(day);
         } else {

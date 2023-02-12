@@ -104,7 +104,7 @@ export default {
 
       for (let i = 1; i < 32; i++) {
         const day = new Date(`${previousMonthYear}-${previousMonth}-${i}`);
-        if (day.getDate()) {
+        if (+day.getMonth() + 1 === previousMonth) {
           days.push(day);
         } else {
           break;
@@ -130,7 +130,8 @@ export default {
 
       for (let i = 1; i < 32; i++) {
         const day = new Date(`${nextMonthYear}-${nextMonth}-${i}`);
-        if (day.getDate()) {
+
+        if (day.getMonth() + 1 === nextMonth) {
           days.push(day);
         } else {
           break;
@@ -143,7 +144,7 @@ export default {
       const days = [];
       for (let i = 1; i < 32; i++) {
         const day = new Date(`${this.currentSelectedYear}-${this.currentSelectedMonth + 1}-${i}`);
-        if (day.getDate()) {
+        if (day.getMonth() === this.currentSelectedMonth) {
           days.push(day);
         } else {
           break;

@@ -70,6 +70,8 @@
 </template>
 
 <script>
+import { setMonth } from "date-fns";
+
 export default {
   name: "MeetupsCalendar",
 
@@ -160,6 +162,10 @@ export default {
       return this.date.getMonth();
     },
 
+    currentSelectedDay() {
+      return this.date.getDate();
+    },
+
     selectedMonthOfYearTitle() {
       return this.date.toLocaleDateString(navigator.language, {
         month: "long",
@@ -177,11 +183,17 @@ export default {
     },
 
     nextMonth() {
-      this.date = new Date(this.date.setMonth(+this.currentSelectedMonth + 1));
+      this.date = setMonth(
+        new Date(this.currentSelectedYear, this.currentSelectedMonth, this.currentSelectedDay),
+        +this.currentSelectedMonth + 1,
+      );
     },
 
     previousMonth() {
-      this.date = new Date(this.date.setMonth(+this.currentSelectedMonth - 1));
+      this.date = setMonth(
+        new Date(this.currentSelectedYear, this.currentSelectedMonth, this.currentSelectedDay),
+        +this.currentSelectedMonth - 1,
+      );
     },
   },
 };

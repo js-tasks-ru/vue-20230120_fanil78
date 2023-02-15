@@ -1,13 +1,13 @@
 <template>
   <nav class="nav">
-    <a href="/login" class="nav__link">Вход</a>
-    <a href="/register" class="nav__link">Регистрация</a>
+    <RouterLink :to="{ name: 'LoginPage' }" class="nav__link">Вход</RouterLink>
+    <RouterLink :to="{ name: 'RegisterPage' }" class="nav__link">Регистрация</RouterLink>
   </nav>
 </template>
 
 <script>
 export default {
-  name: 'MeetupsNav',
+  name: "MeetupsNav",
 };
 </script>
 
@@ -39,7 +39,7 @@ export default {
 }
 
 .nav__link:before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 50%;

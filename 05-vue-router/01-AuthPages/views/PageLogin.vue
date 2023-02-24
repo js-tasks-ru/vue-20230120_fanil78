@@ -40,7 +40,7 @@ export default {
     handleSubmit() {
       // Требуется обработать сабмит формы
       if ("from" in this.$route.query) {
-        this.$router.push({ name: "RegisterPage" });
+        this.$router.push({ path: this.$route.query.from });
       } else {
         this.$router.push({ name: "MainPage" });
       }

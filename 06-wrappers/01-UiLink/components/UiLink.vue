@@ -1,5 +1,5 @@
 <template>
-  <component :is="linkType" class="link">
+  <component :is="tag" class="link">
     <slot></slot>
   </component>
 </template>
@@ -9,17 +9,10 @@ export default {
   name: 'UiLink',
   props: {
     tag: {
-      type: String,
+      type: [String, Object, Function],
       default: 'router-link',
-    }
+    },
   },
-
-  computed: {
-    linkType() {
-      return this.tag === 'router-link' ? 'RouterLink' : 'a'
-    }
-  }
-
 };
 </script>
 

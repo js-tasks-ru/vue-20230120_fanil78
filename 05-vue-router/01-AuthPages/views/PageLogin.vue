@@ -14,20 +14,22 @@
           </div>
         </UiFormGroup>
         <div class="form__buttons">
-          <button type="submit" class="button button_primary button_block">Войти</button>
+          <button type="submit" @click="handleSubmit" class="button button_primary button_block">Войти</button>
         </div>
-        <div class="form__append">Нет аккаунта? <a href="/register" class="link">Зарегистрируйтесь</a></div>
+        <div class="form__append">
+          Нет аккаунта? <RouterLink :to="{ name: 'RegisterPage' }" class="link">Зарегистрируйтесь</RouterLink>
+        </div>
       </form>
     </UiContainer>
   </div>
 </template>
 
 <script>
-import UiFormGroup from '../components/UiFormGroup.vue';
-import UiContainer from '../components/UiContainer.vue';
+import UiFormGroup from "../components/UiFormGroup.vue";
+import UiContainer from "../components/UiContainer.vue";
 
 export default {
-  name: 'PageLogin',
+  name: "PageLogin",
 
   components: {
     UiFormGroup,
@@ -37,6 +39,11 @@ export default {
   methods: {
     handleSubmit() {
       // Требуется обработать сабмит формы
+      if ("from" in this.$route.query) {
+        this.$router.push({ path: this.$route.query.from });
+      } else {
+        this.$router.push({ name: "MainPage" });
+      }
     },
   },
 };

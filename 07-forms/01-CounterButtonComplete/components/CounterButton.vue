@@ -5,6 +5,7 @@
 <script>
 export default {
   name: 'CounterButton',
+  emits: ['update:count'],
   props: {
     count: {
       type: Number,

@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="$emit('submit', meetupLocal)" class="meetup-form">
+  <form @submit.prevent="submitForm" class="meetup-form">
     <div class="meetup-form__content">
       <fieldset class="meetup-form__section">
         <UiFormGroup label="Название">
@@ -35,7 +35,7 @@
         :agenda-item="agendaItem"
         class="meetup-form__agenda-item"
         @remove="meetupLocal.agenda.splice(index, 1)"
-        v-model="meetupLocal.agenda[index]"
+        @update:agendaItem="meetupLocal.agenda[index] = { ...$event }"
       />
 
       <div class="meetup-form__append">
@@ -51,14 +51,7 @@
         <ui-button variant="secondary" block class="meetup-form__aside-button" data-test="cancel" @click="cancel"
           >Отмена</ui-button
         >
-        <ui-button
-          variant="primary"
-          block
-          class="meetup-form__aside-button"
-          data-test="submit"
-          type="submit"
-          @click="$emit('submit', meetupLocal)"
-        >
+        <ui-button variant="primary" block class="meetup-form__aside-button" data-test="submit" type="submit">
           {{ submitText }}
         </ui-button>
       </div>
@@ -120,6 +113,11 @@ export default {
       }
 
       this.meetupLocal.agenda.push(agenda);
+    },
+
+    submitForm() {
+      const meetups = JSON.stringify(this.meetupLocal);
+      this.$emit('submit', JSON.parse(meetups));
     },
   },
 

@@ -73,7 +73,7 @@ import UiFormGroup from './UiFormGroup.vue';
 import UiImageUploader from './UiImageUploader.vue';
 import UiInput from './UiInput.vue';
 import UiInputDate from './UiInputDate.vue';
-// import { createAgendaItem } from '../meetupService.js';
+import { createAgendaItem } from '../meetupService.js';
 
 export default {
   name: 'MeetupForm',
@@ -104,17 +104,6 @@ export default {
   data() {
     return {
       meetupLocal: null,
-
-      agendaDefault: {
-        id: -1,
-        startsAt: '00:00',
-        endsAt: '00:00',
-        type: 'other',
-        title: null,
-        description: null,
-        speaker: null,
-        language: null,
-      },
     };
   },
 
@@ -124,8 +113,7 @@ export default {
     },
 
     addAgenda() {
-      this.agendaDefault.id--;
-      const agenda = { ...this.agendaDefault, id: this.agendaDefault.id };
+      const agenda = createAgendaItem();
 
       if (this.meetupLocal.agenda.length) {
         agenda.startsAt = this.meetupLocal.agenda[this.meetupLocal.agenda.length - 1].endsAt;

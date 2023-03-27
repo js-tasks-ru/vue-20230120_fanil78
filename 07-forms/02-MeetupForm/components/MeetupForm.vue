@@ -71,7 +71,7 @@ import { createAgendaItem } from '../meetupService.js';
 export default {
   name: 'MeetupForm',
 
-  emits: ['cancel'],
+  emits: ['cancel', 'submit'],
 
   components: {
     MeetupAgendaItemForm,
@@ -102,7 +102,7 @@ export default {
 
   methods: {
     cancel() {
-      this.$emit('cancel');
+      this.$emit('cancel', 'submit');
     },
 
     addAgenda() {
@@ -116,8 +116,9 @@ export default {
     },
 
     submitForm() {
-      const meetups = JSON.stringify(this.meetupLocal);
-      this.$emit('submit', JSON.parse(meetups));
+      const meetupsString = JSON.stringify(this.meetupLocal);
+      const meetupsCopy = JSON.parse(meetupsString);
+      this.$emit('submit', meetupsCopy);
     },
   },
 

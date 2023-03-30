@@ -101,7 +101,6 @@ export default {
   data() {
     return {
       agendaItemLocal: { ...this.agendaItem },
-      timeDifferenceInMinutes: 0,
     };
   },
 

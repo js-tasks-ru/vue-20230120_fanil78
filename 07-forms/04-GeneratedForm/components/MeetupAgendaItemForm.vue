@@ -1,31 +1,33 @@
 <template>
   <fieldset class="agenda-item-form">
-    <button type="button" class="agenda-item-form__remove-button">
+    <button type="button" class="agenda-item-form__remove-button" @click="remove">
       <UiIcon icon="trash" />
     </button>
 
     <UiFormGroup>
-      <UiDropdown title="Тип" :options="$options.agendaItemTypeOptions" name="type" />
+      <UiDropdown title="Тип" :options="$options.agendaItemTypeOptions" name="type" v-model="agendaItemLocal.type" />
     </UiFormGroup>
 
     <div class="agenda-item-form__row">
       <div class="agenda-item-form__col">
         <UiFormGroup label="Начало">
-          <UiInput type="time" placeholder="00:00" name="startsAt" />
+          <UiInput type="time" placeholder="00:00" v-model="agendaItemLocal.startsAt" name="startsAt" />
         </UiFormGroup>
       </div>
       <div class="agenda-item-form__col">
         <UiFormGroup label="Окончание">
-          <UiInput type="time" placeholder="00:00" name="endsAt" />
+          <UiInput type="time" placeholder="00:00" v-model="agendaItemLocal.endsAt" name="endsAt" />
         </UiFormGroup>
       </div>
     </div>
 
-    <UiFormGroup label="Заголовок">
-      <UiInput name="title" />
-    </UiFormGroup>
-    <UiFormGroup label="Описание">
-      <UiInput multiline name="description" />
+    <UiFormGroup v-for="item in generatedForm" :label="item.label">
+      <component
+        :is="item.component"
+        v-bind="item.props"
+        :model-value="agendaItemLocal[item.props.name]"
+        @update:model-value="agendaItemLocal[item.props.name] = $event"
+      ></component>
     </UiFormGroup>
   </fieldset>
 </template>
@@ -163,6 +165,76 @@ export default {
     agendaItem: {
       type: Object,
       required: true,
+    },
+  },
+
+  data() {
+    return {
+      agendaItemLocal: { ...this.agendaItem },
+    };
+  },
+
+  computed: {
+    generatedForm() {
+      return this.$options.agendaItemFormSchemas[this.agendaItemLocal.type];
+    },
+  },
+
+  methods: {
+    remove() {
+      this.$emit('remove');
+    },
+
+    timeInHourAndMinutes(fullTime) {
+      const hours = parseInt(fullTime);
+      const minutes = parseInt(fullTime.substring(3));
+
+      return { hours, minutes };
+    },
+
+    timeDifferenceTimeStamp(newValue, oldValue) {
+      const newTime = this.timeInHourAndMinutes(newValue);
+      const oldTime = this.timeInHourAndMinutes(oldValue);
+
+      const newTimeDate = new Date(1970, 1, 1, newTime.hours, newTime.minutes);
+      const oldTimeDate = new Date(1970, 1, 1, oldTime.hours, oldTime.minutes);
+
+      return newTimeDate.getTime() - oldTimeDate.getTime();
+    },
+
+    endTimeTimeStamp() {
+      const endTimeTimestamp = new Date(
+        1970,
+        1,
+        1,
+        this.timeInHourAndMinutes(this.agendaItemLocal.endsAt).hours,
+        this.timeInHourAndMinutes(this.agendaItemLocal.endsAt).minutes,
+      ).getTime();
+
+      return endTimeTimestamp;
+    },
+
+    timeToString(time) {
+      const tzoffset = new Date().getTimezoneOffset() * 60000;
+      const localISOTime = new Date(time - tzoffset).toISOString().substring(11, 16);
+      return localISOTime;
+    },
+  },
+
+  watch: {
+    agendaItemLocal: {
+      deep: true,
+      handler() {
+        this.$emit('update:agendaItem', { ...this.agendaItemLocal });
+      },
+    },
+
+    'agendaItemLocal.startsAt'(newValue, oldValue) {
+      const timeDifference = this.timeDifferenceTimeStamp(newValue, oldValue);
+      const newEndTime = this.endTimeTimeStamp() + timeDifference;
+      const newEndTimeString = this.timeToString(newEndTime);
+
+      this.agendaItemLocal = { ...this.agendaItemLocal, endsAt: newEndTimeString };
     },
   },
 };

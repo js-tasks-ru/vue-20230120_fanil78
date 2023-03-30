@@ -1,18 +1,18 @@
 <template>
-  <form class="meetup-form">
+  <form @submit.prevent="submitForm" class="meetup-form">
     <div class="meetup-form__content">
       <fieldset class="meetup-form__section">
         <UiFormGroup label="Название">
-          <UiInput name="title" />
+          <UiInput name="title" v-model="meetupLocal.title" />
         </UiFormGroup>
         <UiFormGroup label="Дата">
-          <UiInputDate type="date" name="date" />
+          <UiInputDate type="date" name="date" v-model="meetupLocal.date" />
         </UiFormGroup>
         <UiFormGroup label="Место">
-          <UiInput name="place" />
+          <UiInput name="place" v-model="meetupLocal.place" />
         </UiFormGroup>
         <UiFormGroup label="Описание">
-          <UiInput multiline rows="3" name="description" />
+          <UiInput multiline rows="3" name="description" v-model="meetupLocal.description" />
         </UiFormGroup>
         <UiFormGroup label="Изображение">
           <!--
@@ -21,24 +21,25 @@
           -->
           <ui-image-uploader
             name="image"
-            :preview="meetup.image"
-            @select="meetup.imageToUpload = $event"
-            @remove="meetup.imageToUpload = null"
+            :preview="meetupLocal.image"
+            @select="meetupLocal.imageToUpload = $event"
+            @remove="meetupLocal.imageToUpload = null"
           />
         </UiFormGroup>
       </fieldset>
 
       <h3 class="meetup-form__agenda-title">Программа</h3>
-      <!--
       <meetup-agenda-item-form
-         :key="agendaItem.id"
-         :agenda-item="..."
-         class="meetup-form__agenda-item"
-       />
-       -->
+        v-for="(agendaItem, index) in meetupLocal.agenda"
+        :key="agendaItem.id"
+        :agenda-item="agendaItem"
+        class="meetup-form__agenda-item"
+        @remove="meetupLocal.agenda.splice(index, 1)"
+        @update:agendaItem="meetupLocal.agenda[index] = { ...$event }"
+      />
 
       <div class="meetup-form__append">
-        <button class="meetup-form__append-button" type="button" data-test="addAgendaItem">
+        <button class="meetup-form__append-button" type="button" data-test="addAgendaItem" @click="addAgenda">
           + Добавить этап программы
         </button>
       </div>
@@ -47,9 +48,11 @@
     <div class="meetup-form__aside">
       <div class="meetup-form__aside-stick">
         <!-- data-test атрибуты используются для поиска нужного элемента в тестах, не удаляйте их -->
-        <ui-button variant="secondary" block class="meetup-form__aside-button" data-test="cancel">Отмена</ui-button>
+        <ui-button variant="secondary" block class="meetup-form__aside-button" data-test="cancel" @click="cancel"
+          >Отмена</ui-button
+        >
         <ui-button variant="primary" block class="meetup-form__aside-button" data-test="submit" type="submit">
-          SUBMIT
+          {{ submitText }}
         </ui-button>
       </div>
     </div>
@@ -63,10 +66,12 @@ import UiFormGroup from './UiFormGroup.vue';
 import UiImageUploader from './UiImageUploader.vue';
 import UiInput from './UiInput.vue';
 import UiInputDate from './UiInputDate.vue';
-// import { createAgendaItem } from '../meetupService.js';
+import { createAgendaItem } from '../meetupService.js';
 
 export default {
   name: 'MeetupForm',
+
+  emits: ['cancel', 'submit'],
 
   components: {
     MeetupAgendaItemForm,
@@ -87,6 +92,39 @@ export default {
       type: String,
       default: '',
     },
+  },
+
+  data() {
+    return {
+      meetupLocal: null,
+    };
+  },
+
+  methods: {
+    cancel() {
+      this.$emit('cancel', 'submit');
+    },
+
+    addAgenda() {
+      const agenda = createAgendaItem();
+
+      if (this.meetupLocal.agenda.length) {
+        agenda.startsAt = this.meetupLocal.agenda[this.meetupLocal.agenda.length - 1].endsAt;
+      }
+
+      this.meetupLocal.agenda.push(agenda);
+    },
+
+    submitForm() {
+      const meetupsString = JSON.stringify(this.meetupLocal);
+      const meetupsCopy = JSON.parse(meetupsString);
+      this.$emit('submit', meetupsCopy);
+    },
+  },
+
+  created() {
+    const meetups = JSON.stringify(this.meetup);
+    this.meetupLocal = JSON.parse(meetups);
   },
 };
 </script>

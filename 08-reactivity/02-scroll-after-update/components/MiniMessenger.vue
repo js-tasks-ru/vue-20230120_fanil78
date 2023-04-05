@@ -44,6 +44,17 @@ export default {
       this.newMessage = '';
     },
   },
+
+  watch: {
+    messages: {
+      deep: true,
+      handler() {
+        this.$nextTick().then(() => {
+          this.$refs.items[this.$refs.items.length - 1].scrollIntoView({ behavior: 'smooth' });
+        });
+      },
+    },
+  },
 };
 </script>
 

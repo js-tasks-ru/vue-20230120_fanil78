@@ -42,7 +42,10 @@ export default {
     },
 
     setData(sensors) {
-      this.sensors = sensors;
+      const jsonSensors = JSON.stringify(sensors);
+      const parsedSensors = JSON.parse(jsonSensors);
+
+      this.sensors = { ...parsedSensors };
     },
   },
 };
